@@ -31,8 +31,8 @@ HTML5 minifier as PHP class allowing for DOM modifications, like filtering or re
         <DiV CLASS = "show case">
     		<ul Id=   '_hey'>
     			<	LI data-HREF		= "self">This	</LI>
-    			<	li data-true		= ''>is		</li>
-    			<       Li DATA-version	= "5">HTML	</lI>
+    			<	li                          >is		</li>
+    			<       Li DATA-version	=    "5">HTML	</lI>
     		</ul>
     		<p>Minifier!</p>
     	</diV>
@@ -46,7 +46,7 @@ HTML5 minifier as PHP class allowing for DOM modifications, like filtering or re
 
 will output:
 
-    <div class="show case"><ul id=_hey><li data-href=self>This<li data-true="">is<li data-version=5>HTML</ul><p>Minifier!</div>
+    <div class="show case"><ul id=_hey><li data-href=self>This<li>is<li data-version=5>HTML</ul><p>Minifier!</div>
 
 ## Restrictions
 1. Input code must be a valid `HTML5` code.
