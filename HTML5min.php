@@ -240,26 +240,6 @@ class HTML5min{
 		'title',
 	);
 	
-	/*
-		if string passed, simply return minified version
-			$HTML5_minified = new HTML5min($HTML5_unminified);
-		
-		this is shorthand for:
-			$HTML5_minifier = new HTML5min();
-			$HTML5_minifier -> set($HTML5_unminified);
-			$HTML5_minifier -> parse();
-			$HTML5_minifier -> minify();
-			$HTML5_minified = $HTML5_minifier -> string;
-	*/
-	public function __construct(/* string OR void */){
-		if(func_num_args() == 1){
-			$this -> set(func_get_arg(0));
-			$this -> parse();
-			$this -> minify();
-			return $this -> string;
-		}
-	}
-	
 	// set the input (unminified HTML5 code) to minify
 	public function set(/* string */ $i){
 		$this -> input = (string)$i;
