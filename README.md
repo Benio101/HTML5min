@@ -49,8 +49,9 @@ will output:
     <div class="show case"><ul id=_hey><li data-href=self>This<li data-true="">is<li data-version=5>HTML</ul><p>Minifier!</div>
 
 ## Restrictions
-1. HTML5 input code cannot be ommited asymetric.
-2. HTML fragment will be always parsed as inside a normal element.
+1. Input code must be a valid `HTML5` code.
+2. HTML5 input code cannot be ommited asymetric.
+3. HTML fragment will be always parsed as inside a normal element.
 
 ## Notes
 1. This is not an `HTML parser` or `syntax checker`, even if parses `HTML5` string.
