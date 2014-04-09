@@ -4,7 +4,12 @@ HTML5 minifier as PHP class allowing for DOM modifications, like filtering or re
 ## Basic usage
 
     require_once('/path/to/HTML5min.php');
-    $HTML5_minified = new HTML5min($HTML5_unminified);
+    $HTML5_minifier = new HTML5min();
+    $HTML5_minifier -> set($HTML5_unminified);
+    $HTML5_minifier -> parse();
+    $HTML5_minifier -> minify();
+    $HTML5_minified = $HTML5_minifier -> string;
+    
 
 ## Methods
 
