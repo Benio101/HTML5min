@@ -3,6 +3,7 @@ HTML5 minifier as PHP class allowing for DOM modifications, like filtering or re
 
 ## Basic usage
 
+    require_once('/path/to/HTML5min.php');
     $HTML5_minified = new HTML5min($HTML5_unminified);
 
 ## Methods
@@ -21,6 +22,8 @@ HTML5 minifier as PHP class allowing for DOM modifications, like filtering or re
     public $document = true;                   // determine if treat code as HTML document or just a HTML fragment
 
 ## Example
+    require_once('/path/to/HTML5min.php');
+    
     $HTML5_minifier = new HTML5min();
     $HTML5_minifier -> document = false;
     
@@ -56,7 +59,7 @@ will output:
 4. `HTML5min` is prepared to support `HTML5` only. Usage on earlier versions of `HTML` isnt supported.
     
 ## Author
-Benio @ [Benio.me](//benio.me)
+Benio @ [Benio.me](http://benio.me)
 
 ## License
-[CC BY 4](//creativecommons.org/licenses/by/4.0)
+[CC BY 4](http://creativecommons.org/licenses/by/4.0)
