@@ -24,13 +24,11 @@ HTML5 minifier as PHP class allowing for DOM modifications, like filtering or re
     public $input;                             // input string (raw input, unminified)
     public $array;                             // array form of HTML5 code (parsed input aftet parse())
     public string;                             // string form of HTML5 code (minified HTML5 code after minify())
-    public $document = true;                   // determine if treat code as HTML document or just a HTML fragment
 
 ## Example
     require_once('/path/to/HTML5min.php');
     
     $HTML5_minifier = new HTML5min();
-    $HTML5_minifier -> document = false;
     
     $HTML5_minifier -> set(<<<'HTML'
         <DiV CLASS = "show case">
