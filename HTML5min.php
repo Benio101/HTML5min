@@ -20,9 +20,6 @@ class HTML5min{
 	// string	string form if HTML5 code (minified input)
 	public $string;
 	
-	// bool		treat input as HTML document (true) or an HTML fragment (false)
-	public $document = true;
-	
 	/*
 		array of tag markups
 		tag markup is required to determine its syntax
@@ -275,20 +272,12 @@ class HTML5min{
 		$parentID = array(0);		// array	array of int, upcomming parent id (used to determine parent id on next element adding as child of current)
 		$tags_open = array();		// array	array of states of tag open, true - tag is open, false - tag is closed, null - tag wasnt found yet
 		
-		if($this -> document){
-			// skip BOM if presents (yeah, we take care of this too)
-			if(substr($i, 0, 2) === chr(0xFE) . chr(0xFF)){
-				// BOM
-				$p[++$n] = array('name' => 'BOM');
-				
-				$i = substr($i, 2);
-			}
+		// skip BOM if presents (yeah, we take care of this too)
+		if(substr($i, 0, 2) === chr(0xFE) . chr(0xFF)){
+			// BOM
+			$p[++$n] = array('name' => 'BOM');
 			
-			// doctype
-			$i = substr($i, stripos($i, '<!doctype'));
-			$i = substr($i, strpos($i, '>') + 1);
-			$lastClosed = 'DOCTYPE';
-			$p[++$n] = array('name' => 'DOCTYPE');
+			$i = substr($i, 2);
 		}
 		
 		// well, that was only a warm-up, keep going
@@ -335,6 +324,15 @@ class HTML5min{
 						'parent' => $parentID[$t],
 					);
 				}
+			}
+			
+			// doctype
+			if(preg_match('@^<!doctype@isuDX', $i)){
+				$i = substr($i, 9);
+				$i = substr($i, strpos($i, '>') + 1);
+				$lastClosed = 'DOCTYPE';
+				$p[++$n] = array('name' => 'DOCTYPE');
+				continue;
 			}
 			
 			// comment
@@ -427,61 +425,61 @@ class HTML5min{
 					$i = preg_replace('@^[\x9\xA\xC\xD\x20]+@isuDX', '', $i);
 					
 					// =
-					$equal_pos = strpos($i, '=');
-					$brack_pos = strpos($i, '>');
-					$pos = min($equal_pos, $brack_pos);
-					
-					$name = substr($i, 0, $pos);	// attribute name (like class)
-					$i = substr($i, $pos);
-					
-					// skip space characters
-					$i = preg_replace('@^[\x9\xA\xC\xD\x20]+@isuDX', '', $i);
-					$name = preg_replace('@^[\x9\xA\xC\xD\x20]+@isuDX', '', $name);
-					$name = preg_replace('@[\x9\xA\xC\xD\x20]+$@isuDX', '', $name);
-					
-					$value = null;			// value of attribute
-					
-					if($name != ''){
-						// =
-						if($i[0] == '='){
-							$i = substr($i, 1);
-							
-							$i = preg_replace('@^[\x9\xA\xC\xD\x20]+@isuDX', '', $i);
-							
-							if($i[0] == '"'){
+					if(preg_match('@(?<pos>[\x{9}\x{A}\x{C}\x{D}\x{20}"\'>/=])@isuDUX', $i, $m)){
+						$pos = strpos($i, $m['pos']);
+						
+						$name = substr($i, 0, $pos);	// attribute name (like class)
+						$i = substr($i, $pos);
+						
+						// skip space characters
+						$i = preg_replace('@^[\x9\xA\xC\xD\x20]+@isuDX', '', $i);
+						$name = preg_replace('@^[\x9\xA\xC\xD\x20]+@isuDX', '', $name);
+						$name = preg_replace('@[\x9\xA\xC\xD\x20]+$@isuDX', '', $name);
+						
+						$value = null;			// value of attribute
+						
+						if($name != ''){
+							// =
+							if($i[0] == '='){
 								$i = substr($i, 1);
 								
-								$pos = strpos($i, '"');
-								if($pos === false){
-									continue;
-								}
+								$i = preg_replace('@^[\x9\xA\xC\xD\x20]+@isuDX', '', $i);
 								
-								$value = substr($i, 0, $pos);
-								$i = substr($i, $pos + 1);
-							} else if($i[0] == "'"){
-								$i = substr($i, 1);
-								
-								$pos = strpos($i, "'");
-								if($pos === false){
-									continue;
-								}
-								
-								$value = substr($i, 0, $pos);
-								$i = substr($i, $pos + 1);
-							} else {
-								if(preg_match('@^(?<value>[^\x9\xA\xC\xD\x20"\'=<>`]+)@isuDX', $i, $value)){
-									$value = $value['value'];
-									$i = substr($i, strlen($value));
+								if($i[0] == '"'){
+									$i = substr($i, 1);
+									
+									$pos = strpos($i, '"');
+									if($pos === false){
+										continue;
+									}
+									
+									$value = substr($i, 0, $pos);
+									$i = substr($i, $pos + 1);
+								} else if($i[0] == "'"){
+									$i = substr($i, 1);
+									
+									$pos = strpos($i, "'");
+									if($pos === false){
+										continue;
+									}
+									
+									$value = substr($i, 0, $pos);
+									$i = substr($i, $pos + 1);
 								} else {
-									continue;
+									if(preg_match('@^(?<value>[^\x9\xA\xC\xD\x20"\'=<>`]+)@isuDX', $i, $value)){
+										$value = $value['value'];
+										$i = substr($i, strlen($value));
+									} else {
+										continue;
+									}
 								}
+								
+								// skip space characters
+								$i = preg_replace('@^[\x9\xA\xC\xD\x20]+@isuDX', '', $i);
 							}
 							
-							// skip space characters
-							$i = preg_replace('@^[\x9\xA\xC\xD\x20]+@isuDX', '', $i);
+							$attrsArr[strtolower($name)] = $value;
 						}
-						
-						$attrsArr[strtolower($name)] = $value;
 					}
 				}
 				
@@ -652,12 +650,15 @@ class HTML5min{
 						
 						foreach($element['attributes'] as $attribute_name => $attribute_value){
 							// parse tag attributes
-							$this -> string .= ' ' . $attribute_name . '=';
+							$this -> string .= ' ' . $attribute_name;
 							
-							if(preg_match('@^[^\x9\xA\xC\xD\x20"\'=<>`]+$@isuDX', $attribute_value)){
-								$this -> string .= $attribute_value;
-							} else {
-								$this -> string .= '"' . str_replace('"', '&quot;', $attribute_value) . '"';
+							if($attribute_value !== NULL){
+								$this -> string .= '=';
+								if(preg_match('@^[^\x9\xA\xC\xD\x20"\'=<>`]+$@isuDX', $attribute_value)){
+									$this -> string .= $attribute_value;
+								} else {
+									$this -> string .= '"' . str_replace('"', '&quot;', $attribute_value) . '"';
+								}
 							}
 						}
 						
@@ -670,7 +671,9 @@ class HTML5min{
 					}
 					
 					// recursion with a branch of tree
-					$this -> minify($element['content']);
+					if(isset($element['content']) && $element['content'] !== NULL){
+						$this -> minify($element['content']);
+					}
 					
 					// ommite close tags when possible
 					$skipTagClose = false;
