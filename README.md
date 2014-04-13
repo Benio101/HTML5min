@@ -53,7 +53,7 @@ echo $HTML5_minifier -> string;
 
 will output:
 
-```php
+```html
 <div class="show case"><ul id=_hey><li data-href=self>This<li>is<li data-version=5>HTML</ul><p>Minifier!</div>
 ```
 
