@@ -25,13 +25,12 @@ $HTML5_minifier -> parent($id);            // returns parent of given id element
 ```php
 public $input;                             // input string (raw input, unminified)
 public $array;                             // array form of HTML5 code (parsed input aftet parse())
-public string;                             // string form of HTML5 code (minified HTML5 code after minify())
+public $string;                            // string form of HTML5 code (minified HTML5 code after minify())
 ```
 
 ## Example
 ```php
 require_once('/path/to/HTML5min.php');
-
 $HTML5_minifier = new HTML5min();
 
 $HTML5_minifier -> set(<<<'HTML'
