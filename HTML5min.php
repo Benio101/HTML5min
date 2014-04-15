@@ -635,13 +635,21 @@ class HTML5min{
 						$skipTagOpen = true;
 					} else
 					
-					if(in_array($element['name'], array(
-						'colgroup', 'tbody'
-						/* colgroup may contain only col, and since comments are ate, we dont have to check if the 1st element is col */
-						/* tbody may contain only tr, and since comments are ate, we dont have to check if the 1st element is tr */
-						
-						/* anyway, we have to check if element isnt empty and havent attributes */
-					)) && !empty($element['content']) && empty($element['attributes'])){
+					if(
+							$element['name'] == 'colgroup'
+						&&	!empty($element['content'])
+						&&	empty($element['attributes'])
+						&&	$i[$keys[$n - 1]]['name'] != 'colgroup'
+					){
+						$skipTagOpen = true;
+					} else
+					
+					if(
+							$element['name'] == 'tbody'
+						&&	!empty($element['content'])
+						&&	empty($element['attributes'])
+						&&	!in_array($i[$keys[$n - 1]]['name'], array('tbody', 'thead', 'tfoot'))
+					){
 						$skipTagOpen = true;
 					}
 					
